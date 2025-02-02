@@ -17,9 +17,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HomeState(
-    val directUrl: String = "",
-    val token: String = "",
-    val clickedVideo: String = "",
     val error: String = "",
     val videos: List<VideoNode> = emptyList(),
     val recommendedVideos: List<VideoNode> = emptyList(),
@@ -52,21 +49,35 @@ class HomeViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
             runCatching {
                 val topStreams = mediaRepository.getTopStream(first = 20, after = null, tags = null)
-                val categories = mediaRepository.getTopCategories(20).data?.topGames?.categoryEdges ?: emptyList()
+                _uiState.update {
+                    it.copy(
+                        topLiveChannels = topStreams.data?.topStreams?.edges ?: emptyList(),
+                        isLoading = false
+                    )
+                }
+                val categories = mediaRepository.getTopCategories(20).data?.topGames?.categoryEdges
+                    ?: emptyList()
                 val watchedList = mediaRepository.getWatchedList()
                 if (watchedList.isNotEmpty()) {
                     val mostPopularCategory = findMostRepeatedValue(watchedList.map { it.slug })
-                    val videos = mediaRepository.searchVideos("", mostPopularCategory.toString()).data?.searchFor?.videos?.items ?: emptyList()
-                    val streams = mediaRepository.searchStreams(query = mostPopularCategory.toString()).data?.searchStreams?.streamEdges ?: emptyList()
+                    val videos = mediaRepository.searchVideos(
+                        "",
+                        mostPopularCategory.toString()
+                    ).data?.searchFor?.videos?.items ?: emptyList()
+                    val streams =
+                        mediaRepository.searchStreams(query = mostPopularCategory.toString()).data?.searchStreams?.streamEdges
+                            ?: emptyList()
 
-                    _uiState.update { it.copy(
-                        topLiveChannels = topStreams.data?.topStreams?.edges ?: emptyList(),
-                        topCategories = categories,
-                        mostPopularCategory = mostPopularCategory.toString(),
-                        recommendedVideos = videos,
-                        recommendedStreams = streams,
-                        isLoading = false
-                    ) }
+                    _uiState.update {
+                        it.copy(
+                            topLiveChannels = topStreams.data?.topStreams?.edges ?: emptyList(),
+                            topCategories = categories,
+                            mostPopularCategory = mostPopularCategory.toString(),
+                            recommendedVideos = videos,
+                            recommendedStreams = streams,
+                            isLoading = false
+                        )
+                    }
                 }
             }.onFailure { e ->
                 _uiState.update { it.copy(error = e.message ?: "Unknown error", isLoading = false) }
@@ -76,28 +87,34 @@ class HomeViewModel @Inject constructor(
 
     fun checkIfRecommendationReady() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
             try {
                 val watchedList = mediaRepository.getWatchedList()
                 if (watchedList.isEmpty()) {
-                    _uiState.update { it.copy(isLoading = false) }
                     return@launch
                 }
 
                 val mostPopularCategory = findMostRepeatedValue(watchedList.map { it.slug })
-                val videos = mediaRepository.searchVideos("", mostPopularCategory.toString()).data?.searchFor?.videos?.items ?: emptyList()
-                val streams = mediaRepository.searchStreams(query = mostPopularCategory.toString()).data?.searchStreams?.streamEdges ?: emptyList()
+                val videos = mediaRepository.searchVideos(
+                    "",
+                    mostPopularCategory.toString()
+                ).data?.searchFor?.videos?.items ?: emptyList()
+                val streams =
+                    mediaRepository.searchStreams(query = mostPopularCategory.toString()).data?.searchStreams?.streamEdges
+                        ?: emptyList()
 
                 _uiState.update {
                     it.copy(
                         mostPopularCategory = mostPopularCategory.toString(),
                         recommendedVideos = videos,
                         recommendedStreams = streams,
-                        isLoading = false
                     )
                 }
             } catch (e: StreamException) {
-                _uiState.update { it.copy(error = e.message ?: "Error fetching recommendations", isLoading = false) }
+                _uiState.update {
+                    it.copy(
+                        error = e.message ?: "Error fetching recommendations",
+                    )
+                }
             }
         }
     }

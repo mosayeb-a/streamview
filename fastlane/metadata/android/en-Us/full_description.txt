@@ -1,0 +1,10 @@
+A free and open-source offline Android app for navigating the Tehran Metro system efficiently.
+Stream View is a Twitch client focused on providing the best viewing experience on mobile devices:
+
+Features:
+
+- Search & Discover – Easily find live streams, videos, and channels.
+- Personalized Recommendations – Get video and stream suggestions based on your interests.
+- Follow Your Favorites – Stay updated with the latest content from the channels you love.
+- Smooth & Intuitive Browsing – Effortlessly explore trending and top live streams and categories.
+- Open-source, privacy-respecting, and ad-free.

@@ -57,6 +57,12 @@ class HomeViewModel @Inject constructor(
                 }
                 val categories = mediaRepository.getTopCategories(20).data?.topGames?.categoryEdges
                     ?: emptyList()
+                _uiState.update {
+                    it.copy(
+                        topCategories = categories,
+                        isLoading = false
+                    )
+                }
                 val watchedList = mediaRepository.getWatchedList()
                 if (watchedList.isNotEmpty()) {
                     val mostPopularCategory = findMostRepeatedValue(watchedList.map { it.slug })

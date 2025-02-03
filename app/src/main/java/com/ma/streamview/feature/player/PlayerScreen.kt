@@ -150,7 +150,6 @@ fun PlayerScreen(
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                LoadingScreen(displayProgressBar = state.isLoading)
             }
         }
     }

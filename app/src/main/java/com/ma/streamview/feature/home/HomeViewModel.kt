@@ -76,8 +76,6 @@ class HomeViewModel @Inject constructor(
 
                     _uiState.update {
                         it.copy(
-                            topLiveChannels = topStreams.data?.topStreams?.edges ?: emptyList(),
-                            topCategories = categories,
                             mostPopularCategory = mostPopularCategory.toString(),
                             recommendedVideos = videos,
                             recommendedStreams = streams,

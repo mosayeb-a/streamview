@@ -1,4 +1,4 @@
-Stream View is a Twitch player and browser for Android.
+Stream View is a Twitch player and browser for Android. you can downlaod the latest version from [release section](https://github.com/mosayeb-a/streamview/releases/tag/v0.1.0).
 
 <img src="https://github.com/user-attachments/assets/e423435d-ab54-44d6-9a3e-90c27d1d4c93" width="150" style="display: inline-block; margin-right: 10px;"/>
 <img src="https://github.com/user-attachments/assets/c58dfe4e-9259-4059-9ebd-8a3ef9fae5d5" width="150" style="display: inline-block; margin-right: 10px;"/>
